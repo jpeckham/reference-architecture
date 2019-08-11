@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const { checkSchema } = require('express-validator');
+const { checkSchema, validationResult } = require('express-validator');
 
 // define the Express app
 const app = express();
@@ -47,9 +47,9 @@ app.get('/:id', (req, res) => {
 app.post('/', checkSchema({
     title: {
       isLength: {
-        errorMessage: 'title should be between 7-20 chars',
+        errorMessage: 'title should be between 7-50 chars',
         // Multiple options would be expressed as an array
-        options: { min: 7, max: 20 }
+        options: { min: 7, max: 50 }
       }
     },
     description: {
@@ -60,7 +60,12 @@ app.post('/', checkSchema({
         }
       }
 
-  }) ,(req, res) => {
+  }) , (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
     const { title, description } = req.body;
 
   const newQuestion = {
@@ -68,7 +73,9 @@ app.post('/', checkSchema({
     title,
     description,
     answers: [],
-  };
+    };
+
+
   questions.push(newQuestion);
   res.status(200).send();
 });

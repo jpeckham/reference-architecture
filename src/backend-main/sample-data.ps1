@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 $Url = "http://localhost:8081"
 $headers = @{
     'Content-Type' = 'application/json'
@@ -8,8 +10,6 @@ $Body = '{
     "description": "I am trying very hard, but I do not know how to make a delicious sandwich. Can someone help me?"
   }'
 
-# Now, run the Invoke-RestMethod command with all variables in place, specifying a path and file name for the resulting CSV output file.
-
 Invoke-RestMethod -Method Post -Uri $Url -Body $Body -Headers $headers
 
 $Body = '{
@@ -17,15 +17,16 @@ $Body = '{
     "description": "I am trying very hard, but I do not know how to make a delicious sandwich. Can someone help me?"
   }'
 
-# Now, run the Invoke-RestMethod command with all variables in place, specifying a path and file name for the resulting CSV output file.
-
 Invoke-RestMethod -Method Post -Uri $Url -Body $Body -Headers $headers
-
+$Url = "http://localhost:8081"
+$headers = @{
+    'Content-Type' = 'application/json'
+}
 $Body = '{
-    "notallowed": "this rprop should be not allowed"
+    "notallowed": "this rprop should be not allowed",
+    "title": "1234",
+    "description": "1234"
   }'
-
-# Now, run the Invoke-RestMethod command with all variables in place, specifying a path and file name for the resulting CSV output file.
 
 Invoke-RestMethod -Method Post -Uri $Url -Body $Body -Headers $headers
 

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Route} from 'react-router-dom';
 import NavBar from './NavBar';
 import Questions from './Questions'
 
@@ -7,7 +8,7 @@ class App extends Component {
     return (
       <div>
         <NavBar/>
-        <Questions/>
+        <Route exact path='/questions' component={Questions}/>
       </div>
     );
   }

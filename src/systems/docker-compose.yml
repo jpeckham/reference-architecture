@@ -1,0 +1,34 @@
+version: '3.6'
+services:
+  vault:
+    container_name: vault
+    build:
+      context: ./vault
+      dockerfile: Dockerfile
+    ports:
+      - 8200:8200
+    volumes:
+      - ./vault/config:/vault/config
+    environment:
+      - VAULT_ADDR=http://vault:8200
+    cap_add:
+      - IPC_LOCK
+    depends_on:
+      - consul
+    links:
+      - consul
+    command: server -config=/vault/config/config.hcl
+
+
+  consul:
+    container_name: consul
+    build:
+      context: ./consul
+      dockerfile: Dockerfile
+    ports:
+      - 8500:8500
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    command: agent -dev -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect 1
+
+
