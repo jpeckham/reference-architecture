@@ -9,12 +9,16 @@ services:
       - 8200:8200
     volumes:
       - ./vault/config:/vault/config
+      - ./vault/policies:/vault/policies
+      - ./vault/data:/vault/data
+      - ./vault/logs:/vault/logs
     environment:
       - VAULT_ADDR=http://vault:8200
     cap_add:
       - IPC_LOCK
     depends_on:
       - consul
+      - keycloak
     links:
       - consul
     command: server -config=/vault/config/config.hcl
@@ -27,8 +31,18 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8500:8500
+    volumes:
+      - ./consul/data:/consul/data
     environment:
       CONSUL_BIND_INTERFACE: eth0
-    command: agent -dev -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect 1
+    command: agent -ui -server -bind 0.0.0.0 -client 0.0.0.0 -bootstrap-expect 1
 
+  keycloak:
+    container_name: keycloak
+    image: jboss/keycloak
+    ports:
+      - 8080:8080
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: P@ssw0rd
 
